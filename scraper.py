@@ -11,24 +11,39 @@ options.add_argument('--ignore-certificate-errors')
 options.add_experimental_option('excludeSwitches', ['enable-logging'])
 options.add_experimental_option('detach', True)
 options.add_experimental_option('useAutomationExtension', False)
-# website = "http://www.google.com"
+
+website = "https://aitoptools.com"
 
 try:
-    driver = webdriver.Chrome(options=options)    
+    driver = webdriver.Chrome(options=options) 
 
-    website = "https://aitoptools.com"
     driver.get(website)
-    time.sleep(7)
+    time.sleep(3)
+    footerElement = driver.find_element(By.CLASS_NAME, "elementor.elementor-134.elementor-location-footer")
+    SCROLL_PAUSE_TIME = 2
+    last_height = driver.execute_script("return document.body.scrollHeight")
+
+    while True:    
+        driver.execute_script("arguments[0].scrollIntoView();", footerElement)    
+        time.sleep(SCROLL_PAUSE_TIME)    
+        new_height = driver.execute_script("return document.body.scrollHeight")   
+        
+        if new_height == last_height:
+            break
+        
+        last_height = new_height
+
     page_source = driver.page_source
     soup = BeautifulSoup(page_source, "html.parser")
-    toolnames = soup.find('div', class_="jet-listing")
-    for toolname in toolnames.find_all('div', class_="elementor-heading-title elementor-size-default"):
-        tool = toolname.text.strip()
-        print(tool)
+    responses = soup.find('div', class_='jet-listing')
+    for response in responses:
+        getTitles = response.find_all('h2', class_='elementor-heading-title elementor-size-default')
+        for titles in getTitles:
+            title = titles.text.strip()
+            print(title)
 
-except exceptions.WebDriverException:
-    print("You need to download a new version of chromedriver")
+except exceptions.WebDriverException as e:
+    print("Error", str(e))
 
-
-
-driver.quit()
+finally:
+    driver.quit()
