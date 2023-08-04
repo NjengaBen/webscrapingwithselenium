@@ -54,38 +54,40 @@ try:
             tagname=tag.text.strip()
             taglist.append(tagname)
 
-        imgSrc = soup.find('div', class_='elementor-widget-image').img['data-src']
+        imgSrc = soup.find('div', class_='jet-listing jet-listing-dynamic-image').img['data-src']        
         desc = soup.find_all('p')[2].text.strip()
+        features = soup.find()
+        print(features)          
     
-        misc = soup.find_all('div', class_="jet-listing-dynamic-field__content")
-        datalist=[]
-        for infoName in misc:
-            info = infoName.text.strip()
-            if info == "":
-                pass
-            if info == "true":
-                pass
-            else:
-                datalist.append(info)
+    #     misc = soup.find_all('div', class_="jet-listing-dynamic-field__content")
+    #     datalist=[]
+    #     for infoName in misc:
+    #         info = infoName.text.strip()
+    #         if info == "":
+    #             pass
+    #         if info == "true":
+    #             pass
+    #         else:
+    #             datalist.append(info)
     
-        misc_key = ["Price", "Downloads", "Category", "Desc", "Data"]
-        misc_dict = {key:datalist[i] for i, key in enumerate(misc_key)}
-        data = {
-            "Name": name,
-            "Website": url,
-            "Review": reviews,
-            "Rating": ratings,
-            "Tags": taglist,
-            "ImgSrc": imgSrc,
-            "Desc":desc,
-            "Misc":misc_dict
-        }
+    #     misc_key = ["Price", "Downloads", "Category", "Desc", "Data"]
+    #     misc_dict = {key:datalist[i] for i, key in enumerate(misc_key)}
+    #     data = {
+    #         "Name": name,
+    #         "Website": url,
+    #         "Review": reviews,
+    #         "Rating": ratings,
+    #         "Tags": taglist,
+    #         "ImgSrc": imgSrc,
+    #         "Desc":desc,
+    #         "Misc":misc_dict
+    #     }
 
-        # print(data)
-        wholelist.append(data)
-    with open("data_json", 'w') as json_file:
-        json.dump(wholelist, json_file)
-    print(wholelist)   
+    #     # print(data)
+    #     wholelist.append(data)
+    # with open("data_json", 'w') as json_file:
+    #     json.dump(wholelist, json_file)
+    # print(wholelist)   
         
 
 except exceptions.WebDriverException as e:
@@ -94,4 +96,3 @@ except exceptions.WebDriverException as e:
 finally:
     driver.quit()
 
-  
