@@ -6,7 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 
 driver = webdriver.Chrome()
-driver.get("https://aitoptools.com/tool/synthesia/")
+driver.get("https://aitoptools.com/tool/sidekick-by-jigso")
 time.sleep(5)
 # while True:
 #     height = driver.execute_script('return document.body.scrollHeight')    
@@ -19,8 +19,25 @@ time.sleep(5)
 
 page_source = driver.page_source
 soup = BeautifulSoup(page_source, "html.parser")
-toollist = soup.find('section', class_="ob-is-breaking-bad elementor-section elementor-top-section elementor-element elementor-element-b3035da elementor-section-stretched elementor-section-boxed elementor-section-height-default elementor-section-height-default")[0]
-print(toollist)
+section_tags = soup.find_all('section', class_='ob-is-breaking-bad')
+
+tags = []
+features = []
+
+tags_div = soup.find('div', attrs={"data-id":"d100745"})
+tags_links = tags_div.find_all('a', class_='jet-listing-dynamic-terms__link')
+tags = [link.text.strip() for link in tags_links]
+
+features_div = soup.find('div', attrs={"data-id":"5217d73"})
+features_links = features_div.find_all('a', class_='jet-listing-dynamic-terms__link')
+features = [link.text.strip() for link in features_links]
+# if features == []:
+#     features = ["No features"]
+# else:
+#     features = [link.text.strip() for link in features_links]
+
+print("Tags:", tags)
+print("Features:", features)
 
 
 driver.quit()
