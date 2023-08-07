@@ -46,28 +46,45 @@ try:
     toollink1=[]    
 
 
-    for tool in toollist:    
-        for link in tool.find_all('a', href=True):               
-            toollink.append(link['href'])   
+    for tool in toollist:
+        name = tool.find('h2', class_="elementor-heading-title elementor-size-default").text.strip()
+        try:
+            price_div= tool.find('div', attrs={"data-id":"600e028"})
+            price = price_div.find('div', class_="jet-listing-dynamic-field__content").text.strip()
+        except:
+            price = None        
+        try:
+            category_div= tool.find('div', attrs={"data-id":"e33aa69"})
+            category = category_div.find('div', class_="jet-listing-dynamic-field__content").text.strip()
+        except:
+            category = None        
+        download_div=tool.find("div", attrs={"data-id":"a27d6a1"})
+        download = download_div.find('div', class_="jet-listing-dynamic-field__content").text.strip()           
+        for link in tool.find_all('a', href=True):                               
+            toollink.append(link['href'])
         toollink1.append(link['href'])
-
-    for url in toollink1:
-        r=requests.get(url)
-        soup = BeautifulSoup(r.content, 'html.parser')       
-        
-        imgSrc = soup.find('div', class_='jet-listing jet-listing-dynamic-image').img['data-src']        
-        
-        data = {            
+        for url in toollink1:
+            r=requests.get(url)
+            soup = BeautifulSoup(r.content, 'html.parser')       
+            
+            imgSrc = soup.find('div', class_='jet-listing jet-listing-dynamic-image').img['data-src'] 
+        scraped_data = {
+            "Name": name,
+            "price": price,
+            "Category":category,
+            "Download":download,
+            "Links":link['href'],
             "ImgSrc": imgSrc
         }
-       
-        wholelist.append(data)
+        wholelist.append(scraped_data)
+              
+        # wholelist.append(scraped_data)
     # with open("data_json", 'w') as json_file:
     #     json.dump(wholelist, json_file)
-    # print(wholelist)   
-        filename = os.path.basename(imgSrc)
-        save_path = os.path.join("Images", filename)
-        download_image(imgSrc, save_path)  
+    print(wholelist)   
+        # filename = os.path.basename(imgSrc)
+        # save_path = os.path.join("Images", filename)
+        # download_image(imgSrc, save_path)  
 
 except exceptions.WebDriverException as e:
     print("Error", str(e))
