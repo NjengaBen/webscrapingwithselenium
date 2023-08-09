@@ -64,7 +64,7 @@ try:
             for link in tool.find_all('a', href=True):               
                 toollink.append(link['href'])   
             toollink1.append(link['href'])
-            # print("Hurray onto the next...", {len(toollink1)})
+            print("Hurray onto the next...", {len(toollink1)})
             for url in toollink1:
                 r=requests.get(url)
                 soup = BeautifulSoup(r.content, 'html.parser')
