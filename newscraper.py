@@ -21,11 +21,16 @@ driver = webdriver.Chrome()
 driver.get("https://aitoptools.com/")
 
 scroll_pause_time = 2
-tools_per_batch = 12  
-
-scraped_data = []
+tools_per_batch = 12 
 batch_count = 0
-scraped_tools_urls=set()
+
+try:
+    with open("data.json", 'r') as json_file:
+        scraped_data = json.load(json_file)
+        scraped_tools_urls = set(item['Name'] for item in scraped_data)
+except FileNotFoundError:
+    scraped_data = []
+    scraped_tool_urls = set()    
 
 while True:
     batch_count += 1    
